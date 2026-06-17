@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VIX Sniper | Volatility-Based Investment Assistant</title>
+    <link rel="stylesheet" href="styles.css">
+    <!-- Lucide Icons for premium visual glyphs -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+    <div class="app-container">
+        
+        <!-- Header / Navigation -->
+        <header class="app-header">
+            <div class="brand-section">
+                <div class="brand-logo-container">
+                    <img src="VIX_Sniper_Logo.png" alt="VIX Sniper Logo" class="brand-logo-img">
+                </div>
+                <div class="brand-title-wrap">
+                    <h1>
+                        <span>VIX</span>
+                        <span class="brand-title-second">Sniper</span>
+                    </h1>
+                    <p>A volatility-based investment timing assistant</p>
+                </div>
+            </div>
+            <span class="version-badge">MVP DEMO v1.0</span>
+        </header>
+
+        <!-- Animated SPY/VIX Ticker Bar -->
+        <div class="ticker-bar-container">
+            <div class="ticker-bar-wrap">
+                <div class="ticker-bar-content" id="ticker-bar-text">
+                    <!-- Dynamically populated by app.js -->
+                    SPY: -- --% &nbsp;|&nbsp; VIX: -- --%
+                </div>
+            </div>
+        </div>
+
+        <!-- Date Navigation Controls -->
+        <section class="date-navigation-container">
+            <button class="nav-date-btn" id="btn-prev-year" title="Previous Year">«</button>
+            <button class="nav-date-btn" id="btn-prev-month" title="Previous Month">‹</button>
+            <button class="nav-date-btn" id="btn-prev-date" title="Previous Day">
+                <i data-lucide="chevron-left"></i>
+            </button>
+            <div class="current-date-wrap">
+                <span class="current-date-display" id="current-date-display">Jun 24, 2026</span>
+                <button class="calendar-btn" id="btn-calendar" aria-label="Choose Date">
+                    <i data-lucide="calendar"></i>
+                </button>
+                <button class="today-badge-btn" id="btn-today">Today</button>
+            </div>
+            <button class="nav-date-btn" id="btn-next-date" title="Next Day">
+                <i data-lucide="chevron-right"></i>
+            </button>
+            <button class="nav-date-btn" id="btn-next-month" title="Next Month">›</button>
+            <button class="nav-date-btn" id="btn-next-year" title="Next Year">»</button>
+
+            <!-- Calendar Popup Dropdown -->
+            <div class="calendar-popup" id="calendar-popup">
+                <div class="calendar-pop-header">
+                    <button class="cal-nav-btn" id="cal-prev-year">&laquo;</button>
+                    <button class="cal-nav-btn" id="cal-prev-month">&lsaquo;</button>
+                    <span class="cal-month-label" id="cal-month-label">June 2026</span>
+                    <button class="cal-nav-btn" id="cal-next-month">&rsaquo;</button>
+                    <button class="cal-nav-btn" id="cal-next-year">&raquo;</button>
+                </div>
+                <div class="calendar-pop-weekdays">
+                    <span>Sun</span><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span>
+                </div>
+                <div class="calendar-pop-grid" id="calendar-pop-grid">
+                    <!-- Populated dynamically by app.js -->
+                </div>
+                <div class="calendar-pop-footer">
+                    <button class="cal-footer-btn" id="btn-first-day">First Day</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Full-Width Sniper Signal Hero Card -->
+        <div class="dashboard-card recommendation-card state-invest-normal" id="rec-card">
+            <div class="rec-header-row">
+                <h2 class="card-title" style="margin-bottom: 0;">
+                    <i data-lucide="eye"></i>
+                    Sniper Signal
+                </h2>
+            </div>
+
+            <div class="rec-body">
+                <div class="rec-left-panel">
+                     <span class="rec-action-badge invest" id="rec-action-badge">Recommended Action</span>
+                     <div class="rec-action-text invest" id="rec-action">INVEST $500 TODAY</div>
+                     <p class="rec-explanation-text" id="rec-explanation">
+                         VIX is slightly elevated. The model recommends purchasing standard contributions today.
+                     </p>
+                </div>
+                <div class="rec-right-panel">
+                     <div class="regime-spike-box" id="regime-spike-box">
+                         <i data-lucide="shield-alert"></i>
+                         <span id="regime-spike-text">No VIX Spike Detected</span>
+                     </div>
+                </div>
+            </div>
+
+            <div class="rec-footer">
+                <button class="log-btn" id="btn-log-trade">
+                    <i data-lucide="plus-circle"></i>
+                    Log Investment
+                </button>
+            </div>
+
+            <!-- Success Toast for presentation feedback -->
+            <div class="toast" id="success-toast">
+                <i data-lucide="check-circle" style="width: 14px; height: 14px;"></i>
+                Action added to log successfully!
+            </div>
+        </div>
+
+        <!-- Middle Grid: Configuration & Chart -->
+        <div class="dashboard-mid-row">
+            
+            <!-- Parameter Inputs Card -->
+            <div class="dashboard-card">
+                <h2 class="card-title">
+                    <i data-lucide="sliders-horizontal"></i>
+                    Configuration
+                </h2>
+                
+                <div class="input-group">
+                    <label>Monthly Investment</label>
+                    <div class="config-options" id="options-monthly-amount">
+                        <button class="config-opt-btn" data-value="500">$500</button>
+                        <button class="config-opt-btn active" data-value="1000">$1,000</button>
+                        <button class="config-opt-btn" data-value="2000">$2,000</button>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label>Max Months to Invest</label>
+                    <div class="config-options" id="options-max-months">
+                        <button class="config-opt-btn" data-value="3">3</button>
+                        <button class="config-opt-btn active" data-value="5">5</button>
+                        <button class="config-opt-btn" data-value="7">7</button>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <div class="label-row">
+                        <label>Cash Interest / Cost</label>
+                        <div class="tooltip-container">
+                            <i class="tooltip-trigger" data-lucide="help-circle"></i>
+                            <div class="tooltip-box">This represents the yearly cost of money if you borrow cash. The default is 4%. Choose 0% if you already have cash available and do not need to borrow or pay financing costs.</div>
+                        </div>
+                    </div>
+                    <div class="config-options" id="options-interest-rate">
+                        <button class="config-opt-btn" data-value="0">0%</button>
+                        <button class="config-opt-btn" data-value="4">4%</button>
+                        <button class="config-opt-btn active" data-value="6">6%</button>
+                    </div>
+                </div>
+
+                <!-- Max Possible display -->
+                <div class="max-calculation-panel">
+                    <div class="max-calc-label">
+                        <span>Max Opportunity Buying Power</span>
+                        <span>Monthly Amount × Max Months</span>
+                    </div>
+                    <div class="max-calc-value" id="max-possible-val">$5,000</div>
+                </div>
+                <button class="btn-invest-config" id="btn-lets-invest">
+                    Let's Invest!
+                </button>
+                <div class="config-status-msg" id="config-status-msg" style="display: none; font-size: 0.75rem; font-weight: 600; text-align: center; margin-top: 0.5rem; color: var(--color-danger);"></div>
+            </div>
+
+            <!-- Chart Card -->
+            <div class="dashboard-card chart-card">
+                <div class="chart-header">
+                    <h2 class="card-title" style="margin-bottom: 0;">
+                        <i data-lucide="area-chart"></i>
+                        S&P 500
+                    </h2>
+                    
+                    <!-- Timeframe & Line Toggles -->
+                    <div class="chart-controls-row">
+                        <!-- Timeframe Controls -->
+                        <div class="chart-timeframe-wrap">
+                            <span class="control-label">From</span>
+                            <div class="calendar-btn-wrapper" style="position: relative; display: inline-block;">
+                                <button class="calendar-btn" id="chart-btn-from" aria-label="From Date">
+                                    <i data-lucide="calendar"></i>
+                                </button>
+                                <!-- Calendar Popup From -->
+                                <div class="calendar-popup" id="chart-popup-from" style="left: 0; transform: none;">
+                                    <div class="calendar-pop-header">
+                                        <button class="cal-nav-btn" id="chart-from-prev-year">&laquo;</button>
+                                        <button class="cal-nav-btn" id="chart-from-prev-month">&lsaquo;</button>
+                                        <span class="cal-month-label" id="chart-from-month-label">--</span>
+                                        <button class="cal-nav-btn" id="chart-from-next-month">&rsaquo;</button>
+                                        <button class="cal-nav-btn" id="chart-from-next-year">&raquo;</button>
+                                    </div>
+                                    <div class="calendar-pop-weekdays">
+                                        <span>Sun</span><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span>
+                                    </div>
+                                    <div class="calendar-pop-grid" id="chart-from-pop-grid"></div>
+                                    <div class="calendar-pop-footer">
+                                        <button class="cal-footer-btn" id="chart-from-btn-first-day">First Day</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <span class="control-date-display" id="chart-display-from">--</span>
+                            
+                            <span class="control-label" style="margin-left: 0.5rem;">To</span>
+                            <div class="calendar-btn-wrapper" style="position: relative; display: inline-block;">
+                                <button class="calendar-btn" id="chart-btn-to" aria-label="To Date">
+                                    <i data-lucide="calendar"></i>
+                                </button>
+                                <!-- Calendar Popup To -->
+                                <div class="calendar-popup" id="chart-popup-to" style="left: auto; right: 0; transform: none;">
+                                    <div class="calendar-pop-header">
+                                        <button class="cal-nav-btn" id="chart-to-prev-year">&laquo;</button>
+                                        <button class="cal-nav-btn" id="chart-to-prev-month">&lsaquo;</button>
+                                        <span class="cal-month-label" id="chart-to-month-label">--</span>
+                                        <button class="cal-nav-btn" id="chart-to-next-month">&rsaquo;</button>
+                                        <button class="cal-nav-btn" id="chart-to-next-year">&raquo;</button>
+                                    </div>
+                                    <div class="calendar-pop-weekdays">
+                                        <span>Sun</span><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span>
+                                    </div>
+                                    <div class="calendar-pop-grid" id="chart-to-pop-grid"></div>
+                                    <div class="calendar-pop-footer">
+                                        <button class="cal-footer-btn" id="chart-to-btn-first-day">First Day</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <span class="control-date-display" id="chart-display-to">--</span>
+                        </div>
+                    </div>
+
+                    <div class="chart-legend" style="display: flex; gap: 1rem; font-size: 0.75rem; font-weight: 700;">
+                        <div class="legend-item" style="display: flex; align-items: center; gap: 0.35rem;">
+                            <div class="legend-color" style="background: var(--color-accent); width: 8px; height: 8px; border-radius: 50%;"></div>
+                            <span style="color: var(--text-secondary);">S&P 500</span>
+                        </div>
+                        <div class="legend-item" style="display: flex; align-items: center; gap: 0.35rem;">
+                            <div class="legend-color" style="background: #f97316; width: 8px; height: 8px; border-radius: 50%;"></div>
+                            <span style="color: var(--text-secondary);">Investment</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="chart-container-inner">
+                    <canvas id="sp-vix-chart"></canvas>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- History Table Panel (Full-Width) -->
+        <div class="dashboard-card">
+            <div class="history-header">
+                <div class="history-title-group" style="display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap;">
+                    <h2 class="card-title" style="margin-bottom: 0;">
+                        <i data-lucide="history"></i>
+                        Investment History Log
+                    </h2>
+                    <div class="segmented-control" id="group-controls">
+                        <button class="segment-btn" data-mode="week">Week</button>
+                        <button class="segment-btn active" data-mode="month">Month</button>
+                    </div>
+                </div>
+                <div class="summary-metric-container">
+                    <div class="summary-metric-card">
+                        <i data-lucide="piggy-bank"></i>
+                        <div>
+                            <div class="summary-label">Total Invested So Far</div>
+                            <div class="summary-value" id="summary-total-invested">$2,000</div>
+                        </div>
+                    </div>
+                    <div class="summary-metric-card highlighted-strategy-card" id="your-profit-loss-card">
+                        <i data-lucide="line-chart"></i>
+                        <div>
+                            <div class="summary-label">Your Profit / Loss So Far</div>
+                            <div class="summary-value" id="summary-profit-loss">$0</div>
+                        </div>
+                    </div>
+                    <div class="summary-metric-card">
+                        <i data-lucide="bar-chart-3"></i>
+                        <div>
+                            <div class="summary-label">Profit / Loss Over Traditional DCA</div>
+                            <div class="summary-value" id="summary-dca-profit-loss">$0</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- History Table -->
+            <div class="table-wrapper">
+                <table class="history-table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Recommendation</th>
+                            <th>Amount Invested</th>
+                            <th>SPY Value Close</th>
+                            <th>VIX Value Close</th>
+                        </tr>
+                    </thead>
+                    <tbody id="history-table-body">
+                        <!-- Populated by app.js -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Footer Section -->
+        <footer class="app-footer">
+            <div class="footer-disclaimer">
+                <strong>Disclaimer:</strong> This dashboard is an MVP presentation demonstration for the VIX Sniper final project. It uses mock predictions and historical scenarios. It does not provide real investment or financial advice.
+            </div>
+            <div class="footer-links">
+                <a href="#" class="footer-link">Documentation</a>
+                <a href="#" class="footer-link">Methodology</a>
+                <a href="#" class="footer-link">BGU University</a>
+            </div>
+        </footer>
+
+    </div>
+
+
+
+    <!-- ChartJS library CDN for high-end rendering -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="app.js"></script>
+    <script>
+        // Trigger lucide icons loading
+        lucide.createIcons();
+    </script>
+</body>
+</html>
