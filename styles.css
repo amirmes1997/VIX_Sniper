@@ -1522,3 +1522,294 @@ button.cal-pop-day.available.selected.investment-day .cal-investment-dot {
     border-radius: 8px;
     transition: all var(--transition-fast) ease;
 }
+
+/* Base Mobile Responsiveness */
+html, body {
+    max-width: 100%;
+    overflow-x: hidden;
+}
+
+@media (max-width: 768px) {
+    /* 2. App container */
+    .app-container {
+        padding: 0.75rem;
+        gap: 1rem;
+    }
+    .dashboard-card {
+        padding: 1rem;
+    }
+
+    /* 3. Header/mobile branding */
+    .app-header {
+        flex-direction: column !important;
+        align-items: center !important;
+        gap: 0.75rem;
+        padding-bottom: 1rem;
+        text-align: center;
+    }
+    .brand-section {
+        flex-direction: column;
+        gap: 0.5rem;
+        text-align: center;
+    }
+    .brand-title-wrap {
+        align-items: center;
+        text-align: center;
+    }
+    .brand-title-wrap h1 {
+        font-size: 2.2rem;
+        align-items: center;
+        flex-direction: row;
+        gap: 0.25rem;
+    }
+    .brand-title-wrap p {
+        font-size: 0.8rem;
+        text-align: center;
+        margin-top: 0.2rem;
+    }
+    .brand-logo-container {
+        width: 60px;
+        height: 60px;
+    }
+    .brand-logo-img {
+        width: 60px;
+    }
+    .version-badge {
+        position: static !important;
+        transform: none !important;
+        align-self: center;
+        margin-top: 0.25rem;
+        font-size: 0.7rem;
+    }
+
+    /* 4. Ticker/banner */
+    .ticker-bar-container {
+        padding: 0.5rem 1rem;
+        height: auto;
+        min-height: 44px;
+    }
+    .ticker-bar-content {
+        font-size: 0.85rem;
+    }
+
+    /* 5. Date navigation */
+    .date-navigation-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem;
+        width: 100%;
+        max-width: 100%;
+    }
+    .current-date-wrap {
+        order: -1;
+        width: 100%;
+        justify-content: center;
+        margin-bottom: 0.25rem;
+    }
+    .nav-date-btn {
+        width: 40px;
+        height: 40px;
+        font-size: 1.15rem;
+    }
+    .calendar-btn {
+        width: 40px;
+        height: 40px;
+    }
+    .calendar-btn i {
+        width: 18px;
+        height: 18px;
+    }
+    .today-badge-btn {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.8rem;
+        height: 40px;
+        display: inline-flex;
+        align-items: center;
+    }
+
+    /* 6. Sniper Signal card */
+    .recommendation-card {
+        min-height: auto;
+    }
+    .rec-body {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 1rem;
+        margin: 1rem 0;
+    }
+    .rec-left-panel, .rec-right-panel {
+        width: 100%;
+        min-width: 0;
+        align-items: flex-start;
+        text-align: left;
+    }
+    .rec-right-panel {
+        justify-content: flex-start;
+    }
+    .regime-spike-box {
+        width: 100%;
+        justify-content: center;
+        padding: 0.75rem 1rem;
+        font-size: 0.9rem;
+    }
+    .regime-spike-box i {
+        width: 18px;
+        height: 18px;
+    }
+    .rec-action-text {
+        font-size: 1.6rem;
+    }
+    .rec-explanation-text {
+        max-width: 100%;
+        font-size: 0.85rem;
+    }
+    .rec-footer {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: stretch;
+    }
+    .confidence-indicator {
+        justify-content: space-between;
+    }
+    .log-btn {
+        width: 100%;
+        justify-content: center;
+        height: 44px;
+    }
+
+    /* 7. Main grid layout */
+    .dashboard-mid-row {
+        grid-template-columns: 1fr !important;
+        gap: 1rem;
+    }
+
+    /* 8. Configuration card */
+    .config-opt-btn {
+        padding: 0.5rem 0.25rem;
+        font-size: 0.75rem;
+        min-height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .btn-invest-config {
+        padding: 0.75rem 1rem;
+        font-size: 0.95rem;
+        height: 44px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .max-calculation-panel {
+        padding: 0.75rem;
+    }
+    .max-calc-value {
+        font-size: 1.2rem;
+    }
+
+    /* 9. Chart */
+    .chart-header {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.75rem;
+    }
+    .chart-controls-row {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.5rem;
+    }
+    .chart-timeframe-wrap {
+        width: 100%;
+        justify-content: space-between;
+    }
+    .chart-container-inner {
+        height: 260px;
+    }
+    .chart-legend {
+        justify-content: center;
+    }
+
+    /* 10. Calendar popups */
+    .calendar-popup {
+        width: min(300px, calc(100vw - 2rem));
+        left: 50% !important;
+        transform: translateX(-50%) !important;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    }
+    #chart-popup-from, #chart-popup-to {
+        width: min(300px, calc(100vw - 2rem));
+        left: 50% !important;
+        transform: translateX(-50%) !important;
+        right: auto !important;
+    }
+    .cal-pop-day {
+        height: 36px;
+        font-size: 0.85rem;
+    }
+    .cal-nav-btn {
+        width: 32px;
+        height: 32px;
+    }
+
+    /* 11. Investment History Log */
+    .history-header {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 1rem;
+    }
+    .history-title-group {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.75rem;
+    }
+    .summary-metric-container {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.75rem;
+        width: 100%;
+    }
+    .summary-metric-card {
+        width: 100%;
+        justify-content: flex-start;
+    }
+    .segmented-control {
+        width: 100%;
+    }
+    .segment-btn {
+        flex: 1;
+        text-align: center;
+        padding: 0.5rem;
+    }
+    .table-wrapper {
+        margin-top: 0.5rem;
+    }
+    
+    .app-footer {
+        flex-direction: column;
+        gap: 1rem;
+        text-align: center;
+    }
+    .footer-disclaimer {
+        max-width: 100%;
+    }
+    .footer-links {
+        justify-content: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .brand-title-wrap h1 {
+        font-size: 1.80rem;
+    }
+    .rec-action-text {
+        font-size: 1.4rem;
+    }
+    .today-badge-btn {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.75rem;
+    }
+}
+
