@@ -79,9 +79,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let timeline = [];
 
-    // ----------------------------------------------------
-    // State Variables
-    // ----------------------------------------------------
     let state = {
         currentDateIndex: 0,
         monthlyAmount: 1000,
@@ -99,6 +96,25 @@ document.addEventListener('DOMContentLoaded', () => {
         showSpy: true,
         showVix: true
     };
+
+    function initStateFromDOM() {
+        const getActiveValue = (container, isInt = false) => {
+            if (!container) return null;
+            const activeBtn = container.querySelector('.config-opt-btn.active');
+            if (!activeBtn) return null;
+            const valStr = activeBtn.getAttribute('data-value');
+            return isInt ? parseInt(valStr, 10) : parseFloat(valStr);
+        };
+
+        const amt = getActiveValue(optionsMonthlyAmount, true);
+        if (amt !== null) state.monthlyAmount = amt;
+
+        const maxM = getActiveValue(optionsMaxMonths, true);
+        if (maxM !== null) state.maxMonths = maxM;
+
+        const rate = getActiveValue(optionsInterestRate, false);
+        if (rate !== null) state.interestRate = rate;
+    }
 
     let timelineDates = new Set();
     let investmentDates = new Set();
@@ -1248,7 +1264,10 @@ document.addEventListener('DOMContentLoaded', () => {
             })
             .then(csvText => {
                 const rows = parseCSV(csvText);
-                timeline = rows.map(row => {
+                if (rows.length === 0) {
+                    throw new Error("CSV file contains no rows");
+                }
+                const newTimeline = rows.map(row => {
                     const rawDate = convertCSVDateToRaw(row.Day);
                     return {
                         date: formatDate(rawDate),
@@ -1266,6 +1285,12 @@ document.addEventListener('DOMContentLoaded', () => {
                     };
                 }).sort((a, b) => a.rawDate.localeCompare(b.rawDate));
 
+                if (newTimeline.length === 0 || newTimeline.some(item => isNaN(item.sp500Val) || isNaN(item.vixVal))) {
+                    throw new Error("CSV parsed data is invalid or empty");
+                }
+
+                // Everything parsed successfully, replace the current dashboard timeline
+                timeline = newTimeline;
                 timelineDates = new Set(timeline.map(t => t.rawDate));
                 investmentDates = new Set(timeline.filter(t => t.strategyInvestedToday !== 0).map(t => t.rawDate));
                 
@@ -1281,6 +1306,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 return true;
             });
     }
+
+    // Initialize configuration states from DOM active buttons
+    initStateFromDOM();
 
     // Load Default Scenario on startup
     loadScenarioData(getScenarioFileName())
